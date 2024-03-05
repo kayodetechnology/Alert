@@ -1,10 +1,14 @@
-# Building a SOC + Honeynet in Azure (Live Traffic)
+# Microsoft Sentinel | Log Analytics Skills
 
 
 ## Introduction
 
 
+
 In this project, I focused on crafting and implementing Active Rules within Microsoft Sentinel Analytics.
+
+
+
 
 - Azure Key Vault (Event Logs)
  This KQL code is querying Azure Diagnostics logs to identify and retrieve information about failed access attempts in Microsoft Key Vault where the result signature is "Forbidden". It's a useful query for monitoring and investigating access control issues in Azure Key Vault
@@ -40,70 +44,9 @@ In this project, I focused on crafting and implementing Active Rules within Micr
   This KQL code is querying audit logs to identify successful operations where a user is added to a role, specifically focusing on roles like "Global Administrator" or "Company Administrator." The projected fields provide details about the event, including the timestamp, operation name, assigned role, result status, target resources, initiator ID, and target ID. This type of query is useful for monitoring and auditing role assignments in a security or compliance context.
   ![G-Admin](https://i.imgur.com/ajkQAuA.jpeg)
 
-
-- SecurityIncident (Incidents created by Sentinel)
-- AzureNetworkAnalytics_CL (Malicious Flows allowed into our honeynet)
-
-## Architecture Before Hardening / Security Controls
-![Architecture Diagram](https://i.imgur.com/aBDwnKb.jpg)
-
-## Architecture After Hardening / Security Controls
-![Architecture Diagram](https://i.imgur.com/YQNa9Pp.jpg)
-
-The architecture of the mini honeynet in Azure consists of the following components:
-
-- Virtual Network (VNet)
-- Network Security Group (NSG)
-- Virtual Machines (2 windows, 1 linux)
-- Log Analytics Workspace
-- Azure Key Vault
-- Azure Storage Account
-- Microsoft Sentinel
-
-For the "BEFORE" metrics, all resources were originally deployed, exposed to the internet. The Virtual Machines had both their Network Security Groups and built-in firewalls wide open, and all other resources are deployed with public endpoints visible to the Internet; aka, no use for Private Endpoints.
-
-For the "AFTER" metrics, Network Security Groups were hardened by blocking ALL traffic with the exception of my admin workstation, and all other resources were protected by their built-in firewalls as well as Private Endpoint
-
-## Attack Maps Before Hardening / Security Controls
-![NSG Allowed Inbound Malicious Flows](https://i.imgur.com/6OCnR9P.jpeg)<br>
-![Linux Syslog Auth Failures](https://i.imgur.com/NB5dp26.jpeg)<br>
-![Windows RDP/SMB Auth Failures](https://i.imgur.com/o2JOTlc.jpeg)<br>
-![MSSQL Auth Failures](https://i.imgur.com/0BmVMDq.jpeg)<br>
-
-## Metrics Before Hardening / Security Controls
-
-The following table shows the metrics we measured in our insecure environment for 24 hours:
-Start Time 2024-02-27T17:17:56.9449504Z
-Stop Time  2024-02-28T17:17:56.9449504Z
-
-| Metric                   | Count
-| ------------------------ | -----
-| SecurityEvent            | 33039
-| Syslog                   | 6721
-| SecurityAlert            | 189
-| SecurityIncident         | 1299
-| AzureNetworkAnalytics_CL | 843
-
-## Attack Maps Before Hardening / Security Controls
-
-```All map queries actually returned no results due to no instances of malicious activity for the 24 hour period after hardening.```
-
-## Metrics After Hardening / Security Controls
-
-The following table shows the metrics we measured in our environment for another 24 hours, but after we have applied security controls:
-Start Time 2023-03-18 15:37
-Stop Time	2023-03-19 15:37
-
-| Metric                   | Count
-| ------------------------ | -----
-| SecurityEvent            | 8778
-| Syslog                   | 25
-| SecurityAlert            | 0
-| SecurityIncident         | 0
-| AzureNetworkAnalytics_CL | 0
-
 ## Conclusion
+The rules not only showcase proficiency in querying specific datasets but also highlight the ability to correlate information, set thresholds, and extract meaningful details. The emphasis on diverse data sources, such as Azure Diagnostics, SecurityEvent logs, syslog, and AuditLogs, reflects a holistic approach to monitoring different aspects of a computing environment.
 
-In this project, I established a miniature honeynet using Microsoft Azure, integrating log sources into a Log Analytics workspace. The orchestration of alerts and incidents was executed through Microsoft Sentinel, utilizing the ingested logs. Furthermore, metrics were initially gauged in an insecure environment before the enforcement of security controls. Subsequently, a follow-up measurement was conducted post-implementation of security measures. Notably, the application of security controls (NIST 800-53) resulted in a significant reduction in both security events and incidents, underscoring their efficacy.
+Furthermore, the inclusion of conditions and criteria in each rule, such as filtering for specific event IDs, result descriptions, or role assignments, underscores a nuanced understanding of the intricacies involved in security analytics. The rules also contribute to compliance efforts by monitoring and auditing role-based access control activities.
 
-It is essential to highlight that if the network resources experienced substantial utilization by regular users, there could have been a likelihood of generating more security events and alerts within the 24-hour period following the deployment of security controls.
+Overall, these KQL rules collectively represent a robust analytics skill set, showcasing the capacity to navigate and interpret complex datasets for the purpose of identifying, responding to, and mitigating potential security risks. They provide a powerful toolset for organizations seeking to enhance their cybersecurity posture and maintain vigilance over critical system and application activities.
